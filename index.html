@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<meta charset="utf-8"/>
+
+<html>
+    <head>
+        <script src="heatmap.js"></script>
+        <script src="jquery.csv.js"></script>
+        <style>
+            #heatmap {
+                background-image: url(london3.PNG);
+                width: 760px;
+                height: 600px;
+                margin: auto;
+            }
+        </style>
+    </head>
+    
+    <body>
+        <div id='heatmap'></div>
+
+        <script>
+
+            function crearMapa() {
+                var width = window.screen.availWidth*0.8,
+                height = window.screen.availHeight*0.8
+                
+                console.log('PRUEBA')
+                // minimal heatmap instance configuration
+                var heatmapInstance = h337.create({
+                    // only container is required, the rest will be defaults
+                    container: document.getElementById('heatmap')
+                });
+                // now generate some random data
+                var points = [];
+                var max = 0;
+                var len = 100;
+
+                while (len--) {
+                    var val = Math.floor(Math.random()*100);
+                    max = Math.max(max, val);
+                    var point = {
+                        x: Math.floor(Math.random()*width),
+                        y: Math.floor(Math.random()*height),
+                        value: val
+                    };
+                    points.push(point);
+                }
+                // heatmap data format
+                var data = {
+                    max: max,
+                    data: points
+                };
+                console.log(data)
+                // if you have a set of datapoints always use setData instead of addData
+                // for data initialization
+                heatmapInstance.setData(data);
+            }
+            
+            crearMapa()
+        </script>
+
+    </body>
+</html>
