@@ -17,11 +17,11 @@
     
     <body>
         <div id='heatmap'></div>
-        
-        
         <script>
             function leerDatos() {
-                d3.csv("london_crimes.csv",)
+                d3.csv("datos.csv", function(data) {
+                    console.log(data)
+                })
             }
 
             function crearMapa() {
