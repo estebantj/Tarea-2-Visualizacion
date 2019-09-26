@@ -4,7 +4,6 @@
 <html>
     <head>
         <script src="heatmap.js"></script>
-        <script src="jquery.csv.js"></script>
         <style>
             #heatmap {
                 background-image: url(london3.PNG);
@@ -14,49 +13,281 @@
             }
         </style>
     </head>
-    
+
     <body>
         <div id='heatmap'></div>
 
         <script>
+            var width = window.screen.availWidth*0.8,
+            height = window.screen.availHeight*0.8
 
-            function crearMapa() {
-                var width = window.screen.availWidth*0.8,
-                height = window.screen.availHeight*0.8
-                
-                console.log('PRUEBA')
-                // minimal heatmap instance configuration
-                var heatmapInstance = h337.create({
-                    // only container is required, the rest will be defaults
-                    container: document.getElementById('heatmap')
-                });
-                // now generate some random data
-                var points = [];
-                var max = 0;
-                var len = 100;
+            console.log('PRUEBA')
+            // minimal heatmap instance configuration
+            var heatmapInstance = h337.create({
+                // only container is required, the rest will be defaults
+                container: document.getElementById('heatmap')
+            });
+            // now generate some random data
+            var points = [];
+            var max = 0;
+            var len = 100;
 
-                while (len--) {
-                    var val = Math.floor(Math.random()*100);
-                    max = Math.max(max, val);
-                    var point = {
-                        x: Math.floor(Math.random()*width),
-                        y: Math.floor(Math.random()*height),
-                        value: val
-                    };
-                    points.push(point);
-                }
-                // heatmap data format
-                var data = {
-                    max: max,
-                    data: points
+            /*
+            while (len--) {
+                var val = Math.floor(Math.random()*100);
+                var point = {
+                    x: Math.floor(Math.random()*width),
+                    y: Math.floor(Math.random()*height),
+                    value: val
                 };
-                console.log(data)
-                // if you have a set of datapoints always use setData instead of addData
-                // for data initialization
-                heatmapInstance.setData(data);
+                points.push(point);
             }
-            
-            crearMapa()
+            */
+
+            //MEGA SPAM para comprobar y ubicar los puntos
+            //Punto 1
+            var point = {
+              x: 376,
+              y: 269,
+              value: 100
+            };
+            points.push(point);
+            //Punto 2
+            var point = {
+              x: 320,
+              y: 272,
+              value: 100
+            };
+            points.push(point);
+            //Punto 3
+            var point = {
+              x: 290,
+              y: 294,
+              value: 100
+            };
+            points.push(point);
+            //Punto 4
+            var point = {
+              x: 256,
+              y: 295,
+              value: 100
+            };
+            points.push(point);
+            //Punto 5
+            var point = {
+              x: 307,
+              y: 362,
+              value: 100
+            };
+            points.push(point);
+            //Punto 6
+            var point = {
+              x: 350,
+              y: 356,
+              value: 100
+            };
+            points.push(point);
+            //Punto 7
+            var point = {
+              x: 391,
+              y: 321,
+              value: 100
+            };
+            points.push(point);
+            //Punto 8
+            var point = {
+              x: 425,
+              y: 257,
+              value: 100
+            };
+            points.push(point);
+            //Punto 9
+            var point = {
+              x: 409,
+              y: 216,
+              value: 100
+            };
+            points.push(point);
+            //Punto 10
+            var point = {
+              x: 362,
+              y: 222,
+              value: 100
+            };
+            points.push(point);
+            //Punto 11
+            var point = {
+              x: 316,
+              y: 222,
+              value: 100
+            };
+            points.push(point);
+            //Punto 12
+            var point = {
+              x: 226,
+              y: 221,
+              value: 100
+            };
+            points.push(point);
+            //Punto 13
+            var point = {
+              x: 160,
+              y: 266,
+              value: 100
+            };
+            points.push(point);
+            //Punto 14
+            var point = {
+              x: 125,
+              y: 333,
+              value: 100
+            };
+            points.push(point);
+            //Punto 15
+            var point = {
+              x: 207,
+              y: 363,
+              value: 100
+            };
+            points.push(point);
+            //Punto 16
+            var point = {
+              x: 215,
+              y: 438,
+              value: 100
+            };
+            points.push(point);
+            //Punto 17
+            var point = {
+              x: 290,
+              y: 423,
+              value: 100
+            };
+            points.push(point);
+            //Punto 18
+            var point = {
+              x: 305,
+              y: 491,
+              value: 100
+            };
+            points.push(point);
+            //Punto 19
+            var point = {
+              x: 396,
+              y: 493,
+              value: 100
+            };
+            points.push(point);
+            //Punto 20
+            var point = {
+              x: 494,
+              y: 461,
+              value: 100
+            };
+            points.push(point);
+            //Punto 21
+            var point = {
+              x: 450,
+              y: 373,
+              value: 100
+            };
+            points.push(point);
+            //Punto 22
+            var point = {
+              x: 502,
+              y: 327,
+              value: 100
+            };
+            points.push(point);
+            //Punto 23
+            var point = {
+              x: 588,
+              y: 344,
+              value: 100
+            };
+            points.push(point);
+            //Punto 24
+            var point = {
+              x: 670,
+              y: 199,
+              value: 100
+            };
+            points.push(point);
+            //Punto 25
+            var point = {
+              x: 576,
+              y: 237,
+              value: 100
+            };
+            points.push(point);
+            //Punto 26
+            var point = {
+              x: 523,
+              y: 174,
+              value: 100
+            };
+            points.push(point);
+            //Punto 27
+            var point = {
+              x: 491,
+              y: 248,
+              value: 100
+            };
+            points.push(point);
+            //Punto 28
+            var point = {
+              x: 443,
+              y: 162,
+              value: 100
+            };
+            points.push(point);
+            //Punto 29
+            var point = {
+              x: 367,
+              y: 163,
+              value: 100
+            };
+            points.push(point);
+            //Punto 30
+            var point = {
+              x: 378,
+              y: 76,
+              value: 100
+            };
+            points.push(point);
+            //Punto 31
+            var point = {
+              x: 270,
+              y: 127,
+              value: 100
+            };
+            points.push(point);
+            //Punto 32
+            var point = {
+              x: 148,
+              y: 148,
+              value: 100
+            };
+            points.push(point);
+            //Punto 33
+            var point = {
+              x: 56,
+              y: 214,
+              value: 100
+            };
+            points.push(point);
+            //Fin del mega spam para comprobar y ubicar los puntos
+
+            // heatmap data format
+            var data = {
+                max: max,
+                data: points
+            };
+            console.log(data)
+            // if you have a set of datapoints always use setData instead of addData
+            // for data initialization
+            heatmapInstance.setData(data);
+
         </script>
 
     </body>
