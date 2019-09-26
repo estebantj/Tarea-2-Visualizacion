@@ -12,15 +12,54 @@
                 height: 600px;
                 margin: auto;
             }
+            #sidenav {
+                width: 160px; /* Set the width of the sidebar */
+                height: 100%;
+                position: fixed; /* Fixed Sidebar (stay in place on scroll) */
+                z-index: 1; /* Stay on top */
+                top: 0; /* Stay at the top */
+                left: 0;
+                background-color: #f1f1f1;
+                overflow-x: hidden; /* Disable horizontal scroll */
+                padding-top: 20px;
+                margin-left: 5
+            }
+            }
         </style>
     </head>
     
     <body>
+        <div id='sidenav'></div>
+            <p>Categoria mayor:</p>
+            <select id="selectMajor" class="custom-select">
+                <option value="total">Total de poblacion</option>
+                <option value="area">Area</option>
+                <option value="densidad">Densidad</option>
+            </select>
         <div id='heatmap'></div>
         <script>
+            var crimenes = []
+
             function leerDatos() {
                 d3.csv("datos.csv", function(data) {
-                    console.log(data)
+                    /*
+                    // console.log(data.borough)
+                    if ( (distritos.indexOf(data.borough) > -1) == false) {
+                        distritos.push(data.borough)
+                    }
+                    if (buscarMajor(data.major_category) == false) {
+                        majorCategories.push(new crimen(data.major_category))
+                    }
+                    */
+                    var dato = {
+                        borough : data.borough,
+                        major : data.major_category,
+                        minor : data.minor_category,
+                        value : data.value,
+                        year : data.year,
+                        month : data.month,
+                    }
+                    crimenes.push(dato)
                 })
             }
 
@@ -58,7 +97,7 @@
                 heatmapInstance.setData(data);
             }
             leerDatos()
-
+            //console.log("crimenes: ", crimenes)
             // crearMapa()
         </script>
 
