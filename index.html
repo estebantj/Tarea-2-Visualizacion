@@ -45,39 +45,39 @@
         
         <script>
             var distritos = [
-                { cantCrimenes:0, X:0, y:0, nombre:"Croydon"},
-                { cantCrimenes:0, X:0, y:0, nombre:"Greenwich"},
-                { cantCrimenes:0, X:0, y:0, nombre:"Redbridge"},
-                { cantCrimenes:0, X:0, y:0, nombre:"Sutton"},
-                { cantCrimenes:0, X:0, y:0, nombre:"Hillingdon"},
-                { cantCrimenes:0, X:0, y:0, nombre:"Kingston upon Thames"},
-                { cantCrimenes:0, X:0, y:0, nombre:"Lewisham"},
-                { cantCrimenes:0, X:0, y:0, nombre:"Bromley"},
-                { cantCrimenes:0, X:0, y:0, nombre:"Haringey"},
-                { cantCrimenes:0, X:0, y:0, nombre:"Southwark"},
-                { cantCrimenes:0, X:0, y:0, nombre:"Waltham Forest"},
-                { cantCrimenes:0, X:0, y:0, nombre:"Islington"},
-                { cantCrimenes:0, X:0, y:0, nombre:"Hackney"},
-                { cantCrimenes:0, X:0, y:0, nombre:"Newham"},
-                { cantCrimenes:0, X:0, y:0, nombre:"Havering"},
-                { cantCrimenes:0, X:0, y:0, nombre:"Lambeth"},
-                { cantCrimenes:0, X:0, y:0, nombre:"Kensington and Chelsea"},
-                { cantCrimenes:0, X:0, y:0, nombre:"Westminster"},
-                { cantCrimenes:0, X:0, y:0, nombre:"Tower Hamlets"},
-                { cantCrimenes:0, X:0, y:0, nombre:"Bexley"},
-                { cantCrimenes:0, X:0, y:0, nombre:"Hammersmith and Fulham"},
-                { cantCrimenes:0, X:0, y:0, nombre:"Wandsworth"},
-                { cantCrimenes:0, X:100, y:100, nombre:"Ealing"},
-                { cantCrimenes:0, X:0, y:0, nombre:"Harrow"},
-                { cantCrimenes:0, X:0, y:0, nombre:"Brent"},
-                { cantCrimenes:0, X:0, y:0, nombre:"Barnet"},
-                { cantCrimenes:0, X:0, y:0, nombre:"Richmond upon Thames"},
-                { cantCrimenes:0, X:0, y:0, nombre:"Enfield"},
-                { cantCrimenes:0, X:0, y:0, nombre:"Merton"},
-                { cantCrimenes:0, X:0, y:0, nombre:"Hounslow"},
-                { cantCrimenes:0, X:0, y:0, nombre:"Barking and Dagenham"},
-                { cantCrimenes:0, X:0, y:0, nombre:"Camden"},
-                { cantCrimenes:0, X:0, y:0, nombre:"City of London"}
+                { cantCrimenes:0, x:396, y:493, nombre:"Croydon"},
+                { cantCrimenes:0, x:502, y:327, nombre:"Greenwich"},
+                { cantCrimenes:0, x:523, y:174, nombre:"Redbridge"},
+                { cantCrimenes:0, x:305, y:491, nombre:"Sutton"},
+                { cantCrimenes:0, x:56, y:214, nombre:"Hillingdon"},
+                { cantCrimenes:0, x:215, y:438, nombre:"Kingston upon Thames"},
+                { cantCrimenes:0, x:450, y:373, nombre:"Lewisham"},
+                { cantCrimenes:0, x:494, y:461, nombre:"Bromley"},
+                { cantCrimenes:0, x:367, y:163, nombre:"Haringey"},
+                { cantCrimenes:0, x:391, y:321, nombre:"Southwark"},
+                { cantCrimenes:0, x:443, y:162, nombre:"Waltham Forest"},
+                { cantCrimenes:0, x:362, y:222, nombre:"Islington"},
+                { cantCrimenes:0, x:409, y:216, nombre:"Hackney"},
+                { cantCrimenes:0, x:491, y:248, nombre:"Newham"},
+                { cantCrimenes:0, x:670, y:199, nombre:"Havering"},
+                { cantCrimenes:0, x:350, y:356, nombre:"Lambeth"},
+                { cantCrimenes:0, x:290, y:294, nombre:"Kensington and Chelsea"},
+                { cantCrimenes:0, x:320, y:272, nombre:"Westminster"},
+                { cantCrimenes:0, x:425, y:257, nombre:"Tower Hamlets"},
+                { cantCrimenes:0, x:588, y:344, nombre:"Bexley"},
+                { cantCrimenes:0, x:256, y:295, nombre:"Hammersmith and Fulham"},
+                { cantCrimenes:0, x:307, y:362, nombre:"Wandsworth"},
+                { cantCrimenes:0, x:160, y:266, nombre:"Ealing"},
+                { cantCrimenes:0, x:148, y:148, nombre:"Harrow"},
+                { cantCrimenes:0, x:226, y:221, nombre:"Brent"},
+                { cantCrimenes:0, x:270, y:127, nombre:"Barnet"},
+                { cantCrimenes:0, x:207, y:363, nombre:"Richmond upon Thames"},
+                { cantCrimenes:0, x:378, y:76, nombre:"Enfield"},
+                { cantCrimenes:0, x:290, y:423, nombre:"Merton"},
+                { cantCrimenes:0, x:125, y:333, nombre:"Hounslow"},
+                { cantCrimenes:0, x:576, y:237, nombre:"Barking and Dagenham"},
+                { cantCrimenes:0, x:316, y:222, nombre:"Camden"},
+                { cantCrimenes:0, x:376, y:269, nombre:"City of London"}
             ]
 
             var crimenes = []
@@ -135,7 +135,6 @@
                 });
             }
             
-
             function iniciar() {
                 crimenMayorActual = crimenes[0].major
                 crimenMenorActual = crimenes[0].minor
@@ -180,7 +179,7 @@
                 contarCrimenes(crimenMayorActual, crimenMenorActual)
                 distritos.forEach(element => {
                     points.push({
-                        x:element.X,
+                        x:element.x,
                         y:element.y,
                         value:element.cantCrimenes
                     })
@@ -205,7 +204,7 @@
                 contarCrimenes(crimenMayorActual, crimenMenorActual)
                 distritos.forEach(element => {
                     points.push({
-                        x:element.X,
+                        x:element.x,
                         y:element.y,
                         value:element.cantCrimenes
                     })
