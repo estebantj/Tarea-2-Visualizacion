@@ -35,7 +35,7 @@
             </select>
             
             <p>Categoria menor:</p>
-            <select id="selectMinor" class="custom-select">
+            <select id="selectMinor" class="custom-select" onchange="cambioCrimenMenor(this.value)">
 
             </select>
 
@@ -207,6 +207,11 @@
                 // Se llama a la funcion que cuenta los crimenes
                 console.log("Mayor:",crimenMayorActual)
                 console.log("Menor:",crimenMenorActual)
+                contarCrimenes(crimenMayorActual, crimenMenorActual)
+            }
+
+            function cambioCrimenMenor(value) {
+                crimenMenorActual = value
                 contarCrimenes(crimenMayorActual, crimenMenorActual)
             }
 
