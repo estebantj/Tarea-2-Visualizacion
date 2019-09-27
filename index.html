@@ -24,7 +24,6 @@
                 padding-top: 20px;
                 margin-left: 5
             }
-            }
         </style>
     </head>
 
@@ -36,7 +35,7 @@
             </select>
 
             <p>Categoria menor:</p>
-            <select id="selectMinor" class="custom-select">
+            <select id="selectMinor" class="custom-select" onchange="cambioCrimenMenor(this.value)">
 
             </select>
 
@@ -45,10 +44,48 @@
         <div id='heatmap'></div>
 
         <script>
+            var distritos = [
+                { cantCrimenes:0, X:0, y:0, nombre:"Croydon"},
+                { cantCrimenes:0, X:0, y:0, nombre:"Greenwich"},
+                { cantCrimenes:0, X:0, y:0, nombre:"Redbridge"},
+                { cantCrimenes:0, X:0, y:0, nombre:"Sutton"},
+                { cantCrimenes:0, X:0, y:0, nombre:"Hillingdon"},
+                { cantCrimenes:0, X:0, y:0, nombre:"Kingston upon Thames"},
+                { cantCrimenes:0, X:0, y:0, nombre:"Lewisham"},
+                { cantCrimenes:0, X:0, y:0, nombre:"Bromley"},
+                { cantCrimenes:0, X:0, y:0, nombre:"Haringey"},
+                { cantCrimenes:0, X:0, y:0, nombre:"Southwark"},
+                { cantCrimenes:0, X:0, y:0, nombre:"Waltham Forest"},
+                { cantCrimenes:0, X:0, y:0, nombre:"Islington"},
+                { cantCrimenes:0, X:0, y:0, nombre:"Hackney"},
+                { cantCrimenes:0, X:0, y:0, nombre:"Newham"},
+                { cantCrimenes:0, X:0, y:0, nombre:"Havering"},
+                { cantCrimenes:0, X:0, y:0, nombre:"Lambeth"},
+                { cantCrimenes:0, X:0, y:0, nombre:"Kensington and Chelsea"},
+                { cantCrimenes:0, X:0, y:0, nombre:"Westminster"},
+                { cantCrimenes:0, X:0, y:0, nombre:"Tower Hamlets"},
+                { cantCrimenes:0, X:0, y:0, nombre:"Bexley"},
+                { cantCrimenes:0, X:0, y:0, nombre:"Hammersmith and Fulham"},
+                { cantCrimenes:0, X:0, y:0, nombre:"Wandsworth"},
+                { cantCrimenes:0, X:0, y:0, nombre:"Ealing"},
+                { cantCrimenes:0, X:0, y:0, nombre:"Harrow"},
+                { cantCrimenes:0, X:0, y:0, nombre:"Brent"},
+                { cantCrimenes:0, X:0, y:0, nombre:"Barnet"},
+                { cantCrimenes:0, X:0, y:0, nombre:"Richmond upon Thames"},
+                { cantCrimenes:0, X:0, y:0, nombre:"Enfield"},
+                { cantCrimenes:0, X:0, y:0, nombre:"Merton"},
+                { cantCrimenes:0, X:0, y:0, nombre:"Hounslow"},
+                { cantCrimenes:0, X:0, y:0, nombre:"Barking and Dagenham"},
+                { cantCrimenes:0, X:0, y:0, nombre:"Camden"},
+                { cantCrimenes:0, X:0, y:0, nombre:"City of London"}
+            ]
+
             var crimenes = []
             var majorCategories = []
             var minorCategories = []
             var crimenMayorActual = ""
+            var crimenMenorActual = ""
+            var nombres = []
 
             function leerDatos() {
                 d3.csv("datos.csv").then(function(data) {
@@ -61,13 +98,50 @@
                             year : element.year,
                             month : element.month,
                         })
+                        if ((nombres.indexOf(element.borough) > -1) == false) {
+                            nombres.push(element.borough)
+                        }
                     });
                     crearMapa()
                 })
             }
 
+            // Retorna el objeto si lo encuentra, sino retorna -1
+            function buscarDistrito(pDistrito) {
+                var encontrado = false
+                distritos.forEach(element => {
+                    if (element.nombre == pDistrito) {
+                        encontrado = element;
+                    }
+                });
+                return encontrado;
+            }
+
+            function contarCrimenes(pCrimenMayor, pCrimenMenor) {
+                // Se restablecen la cantidad de crimenes
+                distritos.forEach(element => {
+                    element.cantCrimenes = 0;
+                });
+
+                // Por cada crimen se va aumenta el contador de crimenes de cada distrito
+                crimenes.forEach(element => {
+                    if (element.major == pCrimenMayor && element.minor == pCrimenMenor) {
+                        var distrito = buscarDistrito(element.borough)
+                        console.log(distrito)
+                        if (distrito != false) {
+                            distrito.cantCrimenes += 1
+                        }
+                    }
+                });
+
+                console.log(distritos)
+            }
+
+
             function crearMapa() {
                 crimenMayorActual = crimenes[0].major
+                crimenMenorActual = crimenes[0].minor
+
                 // Se agregan las opciones al select de categoria mayor
                 crimenes.forEach(element => {
                     if ((majorCategories.indexOf(element.major) > -1) == false) {
@@ -88,6 +162,9 @@
                     }
 
                 });
+                // Se cuentran los crimenes por distritos para colocar los valores iniciales
+                //contarCrimenes(crimenMayorActual)
+
                 majorCategories = []
                 minorCategories = []
 
@@ -99,21 +176,10 @@
                     // only container is required, the rest will be defaults
                     container: document.getElementById('heatmap')
                 });
-                // now generate some random data
+                // Se cuentan los crimenes para generar los puntos
                 var points = [];
-                var max = 100;
-                var len = 100;
+                var max = 0;
 
-                while (len--) {
-                    var val = Math.floor(Math.random()*100);
-                    max = Math.max(max, val);
-                    var point = {
-                        x: Math.floor(Math.random()*width),
-                        y: Math.floor(Math.random()*height),
-                        value: val
-                    };
-                    points.push(point);
-                }
                 // heatmap data format
                 var data = {
                     max: max,
@@ -125,10 +191,9 @@
             }
 
             function cambiarCrimenesMenores(value) {
-                console.log(value)
-                crimenMayorActual = value
                 var doc = document.getElementById('selectMinor')
                 doc.options.length = 0;
+                crimenMayorActual = value
                 crimenes.forEach(element => {
                     if (element.major == crimenMayorActual && (minorCategories.indexOf(element.minor) > -1) == false) {
                         var select = document.createElement('option');
@@ -138,6 +203,16 @@
                     }
                 });
                 minorCategories = []
+                crimenMenorActual = doc.value
+                // Se llama a la funcion que cuenta los crimenes
+                console.log("Mayor:",crimenMayorActual)
+                console.log("Menor:",crimenMenorActual)
+                contarCrimenes(crimenMayorActual, crimenMenorActual)
+            }
+
+            function cambioCrimenMenor(value) {
+                crimenMenorActual = value
+                contarCrimenes(crimenMayorActual, crimenMenorActual)
             }
 
             leerDatos()
