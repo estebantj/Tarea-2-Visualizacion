@@ -79,6 +79,7 @@
                 { cantCrimenes:0, X:0, y:0, nombre:"Camden"},
                 { cantCrimenes:0, X:0, y:0, nombre:"City of London"}
             ]
+
             var crimenes = []
             var majorCategories = []
             var minorCategories = []
@@ -126,8 +127,9 @@
                 crimenes.forEach(element => {
                     if (element.major == pCrimenMayor && element.minor == pCrimenMenor) {
                         var distrito = buscarDistrito(element.borough)
+                        console.log(distrito)
                         if (distrito != false) {
-                            distritos.cantCrimenes += 1
+                            distrito.cantCrimenes += 1
                         }
                     }    
                 });
