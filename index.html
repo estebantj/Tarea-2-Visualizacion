@@ -4,7 +4,7 @@
 <html>
     <head>
         <script src="heatmap.js"></script>
-        <script src="jquery.csv.js"></script>
+        <script src="d3.js"></script>
         <style>
             #heatmap {
                 background-image: url(london3.PNG);
@@ -12,51 +12,243 @@
                 height: 600px;
                 margin: auto;
             }
+            #sidenav {
+                width: 250px; /* Set the width of the sidebar */
+                height: 100%;
+                position: fixed; /* Fixed Sidebar (stay in place on scroll) */
+                z-index: 1; /* Stay on top */
+                top: 0; /* Stay at the top */
+                left: 0;
+                background-color: #f1f1f1;
+                overflow-x: hidden; /* Disable horizontal scroll */
+                padding-top: 20px;
+                margin-left: 5
+            }
         </style>
     </head>
     
     <body>
+        <div id='sidenav'>
+            <p>Categoria mayor:</p>
+            <select id="selectMajor" class="custom-select" onchange="cambiarCrimenesMenores(this.value)">
+
+            </select>
+            
+            <p>Categoria menor:</p>
+            <select id="selectMinor" class="custom-select" onchange="cambioCrimenMenor(this.value)">
+
+            </select>
+
+        </div>
+
         <div id='heatmap'></div>
-
+        
         <script>
+            var distritos = [
+                { cantCrimenes:0, x:396, y:493, nombre:"Croydon"},
+                { cantCrimenes:0, x:502, y:327, nombre:"Greenwich"},
+                { cantCrimenes:0, x:523, y:174, nombre:"Redbridge"},
+                { cantCrimenes:0, x:305, y:491, nombre:"Sutton"},
+                { cantCrimenes:0, x:56, y:214, nombre:"Hillingdon"},
+                { cantCrimenes:0, x:215, y:438, nombre:"Kingston upon Thames"},
+                { cantCrimenes:0, x:450, y:373, nombre:"Lewisham"},
+                { cantCrimenes:0, x:494, y:461, nombre:"Bromley"},
+                { cantCrimenes:0, x:367, y:163, nombre:"Haringey"},
+                { cantCrimenes:0, x:391, y:321, nombre:"Southwark"},
+                { cantCrimenes:0, x:443, y:162, nombre:"Waltham Forest"},
+                { cantCrimenes:0, x:362, y:222, nombre:"Islington"},
+                { cantCrimenes:0, x:409, y:216, nombre:"Hackney"},
+                { cantCrimenes:0, x:491, y:248, nombre:"Newham"},
+                { cantCrimenes:0, x:670, y:199, nombre:"Havering"},
+                { cantCrimenes:0, x:350, y:356, nombre:"Lambeth"},
+                { cantCrimenes:0, x:290, y:294, nombre:"Kensington and Chelsea"},
+                { cantCrimenes:0, x:320, y:272, nombre:"Westminster"},
+                { cantCrimenes:0, x:425, y:257, nombre:"Tower Hamlets"},
+                { cantCrimenes:0, x:588, y:344, nombre:"Bexley"},
+                { cantCrimenes:0, x:256, y:295, nombre:"Hammersmith and Fulham"},
+                { cantCrimenes:0, x:307, y:362, nombre:"Wandsworth"},
+                { cantCrimenes:0, x:160, y:266, nombre:"Ealing"},
+                { cantCrimenes:0, x:148, y:148, nombre:"Harrow"},
+                { cantCrimenes:0, x:226, y:221, nombre:"Brent"},
+                { cantCrimenes:0, x:270, y:127, nombre:"Barnet"},
+                { cantCrimenes:0, x:207, y:363, nombre:"Richmond upon Thames"},
+                { cantCrimenes:0, x:378, y:76, nombre:"Enfield"},
+                { cantCrimenes:0, x:290, y:423, nombre:"Merton"},
+                { cantCrimenes:0, x:125, y:333, nombre:"Hounslow"},
+                { cantCrimenes:0, x:576, y:237, nombre:"Barking and Dagenham"},
+                { cantCrimenes:0, x:316, y:222, nombre:"Camden"},
+                { cantCrimenes:0, x:376, y:269, nombre:"City of London"}
+            ]
 
-            function crearMapa() {
+            var crimenes = []
+            var majorCategories = []
+            var minorCategories = []
+            var crimenMayorActual = ""
+            var crimenMenorActual = ""
+            var nombres = []
+            var heatmapInstance
+
+            function leerDatos() {    
+                d3.csv("datos.csv").then(function(data) {
+                    data.forEach(element => {
+                        crimenes.push({
+                            borough : element.borough,
+                            major : element.major_category,
+                            minor : element.minor_category,
+                            value : element.value,
+                            year : element.year,
+                            month : element.month,
+                        })
+                        if ((nombres.indexOf(element.borough) > -1) == false) {
+                            nombres.push(element.borough)
+                        }
+                    });
+                    iniciar()
+                })
+            }
+
+            // Retorna el objeto si lo encuentra, sino retorna -1
+            function buscarDistrito(pDistrito) {
+                var encontrado = false
+                distritos.forEach(element => {
+                    if (element.nombre == pDistrito) {
+                        encontrado = element;
+                    }
+                });
+                return encontrado;
+            }
+            
+            function contarCrimenes(pCrimenMayor, pCrimenMenor) {
+                // Se restablecen la cantidad de crimenes
+                distritos.forEach(element => {
+                    element.cantCrimenes = 0;
+                });
+
+                // Por cada crimen se va aumenta el contador de crimenes de cada distrito
+                crimenes.forEach(element => {
+                    if (element.major == pCrimenMayor && element.minor == pCrimenMenor) {
+                        var distrito = buscarDistrito(element.borough)
+                        if (distrito != false) {
+                            distrito.cantCrimenes += 1
+                        }
+                    }    
+                });
+            }
+            
+            function iniciar() {
+                crimenMayorActual = crimenes[0].major
+                crimenMenorActual = crimenes[0].minor
+
+                // Se agregan las opciones al select de categoria mayor
+                crimenes.forEach(element => {
+                    if ((majorCategories.indexOf(element.major) > -1) == false) {
+                        var doc = document.getElementById('selectMajor')
+                        var select = document.createElement('option');
+                        select.text=element.major
+                        doc.add(select, doc[doc.len])
+                        majorCategories.push(element.major)
+
+                    }
+                    // Se revisa si el crimen menor corresponde al crimen mayor que se encuentra inicialmente
+                    if (element.major == crimenMayorActual && (minorCategories.indexOf(element.minor) > -1) == false) {
+                        var doc = document.getElementById('selectMinor')
+                        var select = document.createElement('option');
+                        select.text=element.minor
+                        doc.add(select, doc[doc.len])
+                        minorCategories.push(element.minor)
+                    }
+
+                });
+                // Se cuentran los crimenes por distritos para colocar los valores iniciales
+
+                majorCategories = []
+                minorCategories = []
+                
                 var width = window.screen.availWidth*0.8,
                 height = window.screen.availHeight*0.8
                 
-                console.log('PRUEBA')
                 // minimal heatmap instance configuration
-                var heatmapInstance = h337.create({
+                heatmapInstance = h337.create({
                     // only container is required, the rest will be defaults
                     container: document.getElementById('heatmap')
                 });
-                // now generate some random data
+
+                // Se cuentan los crimenes para generar los puntos
                 var points = [];
                 var max = 0;
-                var len = 100;
-
-                while (len--) {
-                    var val = Math.floor(Math.random()*100);
-                    max = Math.max(max, val);
-                    var point = {
-                        x: Math.floor(Math.random()*width),
-                        y: Math.floor(Math.random()*height),
-                        value: val
-                    };
-                    points.push(point);
-                }
+                contarCrimenes(crimenMayorActual, crimenMenorActual)
+                distritos.forEach(element => {
+                    points.push({
+                        x:element.x,
+                        y:element.y,
+                        value:element.cantCrimenes
+                    })
+                    max = Math.max(max, element.cantCrimenes)
+                });
                 // heatmap data format
                 var data = {
                     max: max,
                     data: points
                 };
-                console.log(data)
                 // if you have a set of datapoints always use setData instead of addData
                 // for data initialization
                 heatmapInstance.setData(data);
             }
-            
-            crearMapa()
+
+            // Cuando se cambian los datos se actualiza el data del heatmap
+            function cambiarData() {
+                // Se cuentan los crimenes para generar los puntos
+                var points = [];
+                var max = 0;
+                contarCrimenes(crimenMayorActual, crimenMenorActual)
+                distritos.forEach(element => {
+                    points.push({
+                        x:element.x,
+                        y:element.y,
+                        value:element.cantCrimenes
+                    })
+                    max = Math.max(max, element.cantCrimenes)
+                });
+                // heatmap data format
+                var data = {
+                    max: max,
+                    data: points
+                };
+                // if you have a set of datapoints always use setData instead of addData
+                // for data initialization
+                heatmapInstance.setData(data);
+            }
+
+            // Cuando se elije un crimen mayor distinto se cambia el select de crimenes menores
+            function cambiarCrimenesMenores(value) {
+                var doc = document.getElementById('selectMinor')
+                doc.options.length = 0;
+                crimenMayorActual = value
+                crimenes.forEach(element => {
+                    if (element.major == crimenMayorActual && (minorCategories.indexOf(element.minor) > -1) == false) {                        
+                        var select = document.createElement('option');
+                        select.text=element.minor
+                        doc.add(select, doc[doc.len])
+                        minorCategories.push(element.minor)
+                    }
+                });
+                minorCategories = []
+                crimenMenorActual = doc.value
+                // Se llama a la funcion que cuenta los crimenes
+                //console.log("Mayor:",crimenMayorActual)
+                //console.log("Menor:",crimenMenorActual)
+                contarCrimenes(crimenMayorActual, crimenMenorActual)
+                cambiarData()
+            }
+
+            // Esta funcion es para cuando se cambia el crimen menor
+            function cambioCrimenMenor(value) {
+                crimenMenorActual = value
+                contarCrimenes(crimenMayorActual, crimenMenorActual)
+                cambiarData()
+            }
+
+            leerDatos()
         </script>
 
     </body>
