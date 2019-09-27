@@ -67,7 +67,7 @@
                 { cantCrimenes:0, X:0, y:0, nombre:"Bexley"},
                 { cantCrimenes:0, X:0, y:0, nombre:"Hammersmith and Fulham"},
                 { cantCrimenes:0, X:0, y:0, nombre:"Wandsworth"},
-                { cantCrimenes:0, X:0, y:0, nombre:"Ealing"},
+                { cantCrimenes:0, X:100, y:100, nombre:"Ealing"},
                 { cantCrimenes:0, X:0, y:0, nombre:"Harrow"},
                 { cantCrimenes:0, X:0, y:0, nombre:"Brent"},
                 { cantCrimenes:0, X:0, y:0, nombre:"Barnet"},
@@ -86,6 +86,7 @@
             var crimenMayorActual = ""
             var crimenMenorActual = ""
             var nombres = []
+            var heatmapInstance
 
             function leerDatos() {    
                 d3.csv("datos.csv").then(function(data) {
@@ -102,7 +103,7 @@
                             nombres.push(element.borough)
                         }
                     });
-                    crearMapa()
+                    iniciar()
                 })
             }
 
@@ -127,18 +128,15 @@
                 crimenes.forEach(element => {
                     if (element.major == pCrimenMayor && element.minor == pCrimenMenor) {
                         var distrito = buscarDistrito(element.borough)
-                        console.log(distrito)
                         if (distrito != false) {
                             distrito.cantCrimenes += 1
                         }
                     }    
                 });
-
-                console.log(distritos)
             }
             
 
-            function crearMapa() {
+            function iniciar() {
                 crimenMayorActual = crimenes[0].major
                 crimenMenorActual = crimenes[0].minor
 
@@ -163,7 +161,6 @@
 
                 });
                 // Se cuentran los crimenes por distritos para colocar los valores iniciales
-                //contarCrimenes(crimenMayorActual)
 
                 majorCategories = []
                 minorCategories = []
@@ -172,14 +169,24 @@
                 height = window.screen.availHeight*0.8
                 
                 // minimal heatmap instance configuration
-                var heatmapInstance = h337.create({
+                heatmapInstance = h337.create({
                     // only container is required, the rest will be defaults
                     container: document.getElementById('heatmap')
                 });
+
                 // Se cuentan los crimenes para generar los puntos
                 var points = [];
                 var max = 0;
-                
+                contarCrimenes(crimenMayorActual, crimenMenorActual)
+                distritos.forEach(element => {
+                    points.push({
+                        x:element.X,
+                        y:element.y,
+                        value:element.cantCrimenes
+                    })
+                    max = Math.max(max, element.cantCrimenes)
+                });
+                console.log(points)
                 // heatmap data format
                 var data = {
                     max: max,
@@ -190,6 +197,32 @@
                 heatmapInstance.setData(data);
             }
 
+            // Cuando se cambian los datos se actualiza el data del heatmap
+            function cambiarData() {
+                // Se cuentan los crimenes para generar los puntos
+                var points = [];
+                var max = 0;
+                contarCrimenes(crimenMayorActual, crimenMenorActual)
+                distritos.forEach(element => {
+                    points.push({
+                        x:element.X,
+                        y:element.y,
+                        value:element.cantCrimenes
+                    })
+                    max = Math.max(max, element.cantCrimenes)
+                });
+                console.log(points)
+                // heatmap data format
+                var data = {
+                    max: max,
+                    data: points
+                };
+                // if you have a set of datapoints always use setData instead of addData
+                // for data initialization
+                heatmapInstance.setData(data);
+            }
+
+            // Cuando se elije un crimen mayor distinto se cambia el select de crimenes menores
             function cambiarCrimenesMenores(value) {
                 var doc = document.getElementById('selectMinor')
                 doc.options.length = 0;
@@ -205,14 +238,17 @@
                 minorCategories = []
                 crimenMenorActual = doc.value
                 // Se llama a la funcion que cuenta los crimenes
-                console.log("Mayor:",crimenMayorActual)
-                console.log("Menor:",crimenMenorActual)
+                //console.log("Mayor:",crimenMayorActual)
+                //console.log("Menor:",crimenMenorActual)
                 contarCrimenes(crimenMayorActual, crimenMenorActual)
+                cambiarData()
             }
 
+            // Esta funcion es para cuando se cambia el crimen menor
             function cambioCrimenMenor(value) {
                 crimenMenorActual = value
                 contarCrimenes(crimenMayorActual, crimenMenorActual)
+                cambiarData()
             }
 
             leerDatos()
