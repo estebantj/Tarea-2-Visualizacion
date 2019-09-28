@@ -22,7 +22,38 @@
                 background-color: #f1f1f1;
                 overflow-x: hidden; /* Disable horizontal scroll */
                 padding-top: 20px;
-                margin-left: 5
+                margin-left: 5px
+            }
+            p#escalaTitulo{
+              margin-top: 60px;
+              margin-left: 5px;
+            }
+            div#escalaGrafico{
+                margin: auto;
+                margin-top: 10px;
+                margin-left: 10px;
+                width:50px;
+                height:50px;
+            }
+            div#rojo{
+                width: 30px;
+                height: 30px;
+                background-color: red;
+            }
+            div#amarrillo {
+                width: 30px;
+                height: 30px;
+                background-color: yellow;
+            }
+            div#verde{
+                width: 30px;
+                height: 30px;
+                background-color: #4cf752;
+            }
+            div#azul{
+                width: 30px;
+                height: 30px;
+                background-color: #7483f7;
             }
         </style>
     </head>
@@ -38,6 +69,26 @@
             <select id="selectMinor" class="custom-select" onchange="cambioCrimenMenor(this.value)">
 
             </select>
+
+            <p id="escalaTitulo">Escala:</p>
+
+            <div id ="escalaGrafico">
+
+              <div id = "rojo">
+
+              </div>
+
+              <div id = "amarrillo">
+              </div>
+
+              <div id = "verde">
+              </div>
+
+              <div id = "azul">
+                < 0
+              </div>
+
+            </div>
 
         </div>
 
@@ -185,6 +236,7 @@
                     })
                     max = Math.max(max, element.cantCrimenes)
                 });
+                document.getElementById("rojo").innerHTML = max.toString();
                 // heatmap data format
                 var data = {
                     max: max,
@@ -209,6 +261,7 @@
                     })
                     max = Math.max(max, element.cantCrimenes)
                 });
+                document.getElementById("rojo").innerHTML = max.toString();
                 // heatmap data format
                 var data = {
                     max: max,
